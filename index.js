@@ -105,7 +105,7 @@ function main(){
     var secsLeft = timer.calculateSecsLeft()
     if (secsLeft === 0) {
       showMessage()
-      timer.reset(MESSAGE_TIMEOUT)
+      timer = new Timer(MESSAGE_TIMEOUT);
       timer.start()
       }
     timerWiget.update(secsLeft)
