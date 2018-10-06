@@ -1,5 +1,13 @@
 var TIMEOUT_IN_SECS = 3 * 60
 var TEMPLATE = '<h1><span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></h1>'
+var MESSAGE_TIMEOUT = 30
+var MESSAGES = [
+  'If you can dream it, you can do it',
+  'Where there is a will, there is a way',
+  'Do not wait, the time will never be "just right"',
+  'Don’t watch the clock; do what it does. Keep going.',
+]
+
 
 function padZero(number){
   return ("00" + String(number)).slice(-2);
@@ -56,7 +64,7 @@ class TimerWidget{
     // adds HTML tag to current page
     this.timerContainer = document.createElement('div')
 
-    this.timerContainer.setAttribute("style", "height: 100px;")
+    this.timerContainer.setAttribute("style", "position: fixed; top: 20px; left: 30px; height: 100px; z-index: 999;")
     this.timerContainer.innerHTML = TEMPLATE
 
     rootTag.insertBefore(this.timerContainer, rootTag.firstChild)
@@ -88,8 +96,18 @@ function main(){
 
   timerWiget.mount(document.body)
 
+  function showMessage(){
+    var message = MESSAGES[Math.floor(Math.random() * MESSAGES.length)]
+    window.alert(message)
+  }
+
   function handleIntervalTick(){
     var secsLeft = timer.calculateSecsLeft()
+    if (secsLeft === 0) {
+      showMessage()
+      timer.reset(MESSAGE_TIMEOUT)
+      timer.start()
+      }
     timerWiget.update(secsLeft)
   }
 
@@ -104,9 +122,10 @@ function main(){
     }
   }
 
+
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   document.addEventListener("visibilitychange", handleVisibilityChange, false);
-  handleVisibilityChange()
+  handleVisibilityChange();
 }
 
 if (document.readyState === "complete" || document.readyState === "loaded") {
